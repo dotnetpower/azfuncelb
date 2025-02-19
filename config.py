@@ -1,0 +1,7 @@
+import os
+class DefaultConfig:
+    AZURE_OPENAI_KEY  = os.environ.get("AZURE_OPENAI_KEY", "")
+    AZURE_OPENAI_ENDPOINT = os.environ.get("AZURE_OPENAI_ENDPOINT", "")
+    AZURE_OPENAI_VERSION = os.environ.get("AZURE_OPENAI_VERSION", "")
+    
+    APPLICATIONINSIGHTS_CONNECTION_STRING = os.environ.get("APPLICATIONINSIGHTS_CONNECTION_STRING", "")
