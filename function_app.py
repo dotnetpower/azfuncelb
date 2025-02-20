@@ -29,20 +29,18 @@ CONFIG = DefaultConfig()
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
 
-app = FastAPI(swagger_ui_parameters={"syntaxHighlight": False})
+fast_app = FastAPI(swagger_ui_parameters={"syntaxHighlight": False})
+app = func.AsgiFunctionApp(app=fast_app, http_auth_level=func.AuthLevel.ANONYMOUS) 
 
-
-
-@app.get("/ping") 
+@fast_app.get("/ping") 
 async def ping(): 
     return Response(content="pong", media_type="text/plain")
 
-@app.get("/return_http_no_body") 
+@fast_app.get("/return_http_no_body") 
 async def return_http_no_body(): 
     return Response(content="", media_type="text/plain")
 
-
-@app.get("/get_aks_status") 
+@fast_app.get("/get_aks_status") 
 async def get_aks_status():
     credential = DefaultAzureCredential()
     
@@ -52,7 +50,7 @@ async def get_aks_status():
         
     return Response(content=str(proc), media_type="text/plain")
 
-@app.get("/elb_status") 
+@fast_app.get("/elb_status") 
 async def elb_status():
     credential = DefaultAzureCredential()
     
@@ -62,4 +60,18 @@ async def elb_status():
         
     return Response(content=str(proc), media_type="text/plain")
 
-app = func.AsgiFunctionApp(app=app, http_auth_level=func.AuthLevel.ANONYMOUS) 
+@fast_app.get("/elb_status2") 
+async def elb_status2():
+    credential = DefaultAzureCredential()
+    
+    cmd = f'elastic-blast --help'
+    proc = str(safe_exec(cmd).stdout)
+    proc = proc.replace('\\n', '<br>')
+    
+    return {
+        "result": proc
+    }
+        
+    return Response(content=str(proc), media_type="text/plain")
+
+
